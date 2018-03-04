@@ -57,16 +57,18 @@ namespace B_Splitter
             Console.WriteLine("Sending passenger: " + passengerObj);
             outputPassangerChannel.Send(passengerObj);
 
-            var guid = Guid.NewGuid();
+            var packageId = Guid.NewGuid();
+            var numbersInRandomOrder = Enumerable.Range(0, luggageXml.Count).OrderBy(e => Guid.NewGuid()).ToArray();
             for (var i = 0; i < luggageXml.Count; i++)
             {
-                Console.WriteLine($"Sending luggage {i + 1} of {luggageXml.Count}.");
+                var packageNo = numbersInRandomOrder[i];
+                Console.WriteLine($"Sending luggage {packageNo + 1} of {luggageXml.Count}.");
                 outputLuggageChannel.Send(new PackageWrapper<Luggage>()
                 {
-                    PackageId = guid,
-                    PackageNumber = i + 1,
+                    PackageId = packageId,
+                    PackageNumber = packageNo + 1,
                     PackageCount = luggageXml.Count,
-                    Body = Luggage.Create(luggageXml.Item(i))
+                    Body = Luggage.Create(luggageXml.Item(packageNo))
                 });
             }
 

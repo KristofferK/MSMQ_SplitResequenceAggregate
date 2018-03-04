@@ -21,4 +21,16 @@
         <Category>Large</Category>
         <Weight>22.7</Weight>
     </Luggage>
+    <Luggage>
+        <Id>CA937200305252</Id>
+        <Identification>3</Identification>
+        <Category>Large</Category>
+        <Weight>21.3</Weight>
+    </Luggage>
+    <Luggage>
+        <Id>CA937200305252</Id>
+        <Identification>4</Identification>
+        <Category>Large</Category>
+        <Weight>20.0</Weight>
+    </Luggage>
 </FlightDetailsInfoResponse>
