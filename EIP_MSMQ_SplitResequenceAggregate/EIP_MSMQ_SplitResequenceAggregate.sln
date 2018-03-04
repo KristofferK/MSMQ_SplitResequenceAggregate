@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "ClassLibrary\Lib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B_Splitter", "B_Splitter\B_Splitter.csproj", "{B84C93D8-DE39-4128-B201-0D1ED546F1DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C_LuggageResequencer", "C_LuggageResequencer\C_LuggageResequencer.csproj", "{D6F015A4-96D7-4E2A-86E3-461D4E9DB903}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B84C93D8-DE39-4128-B201-0D1ED546F1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B84C93D8-DE39-4128-B201-0D1ED546F1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B84C93D8-DE39-4128-B201-0D1ED546F1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F015A4-96D7-4E2A-86E3-461D4E9DB903}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F015A4-96D7-4E2A-86E3-461D4E9DB903}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F015A4-96D7-4E2A-86E3-461D4E9DB903}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F015A4-96D7-4E2A-86E3-461D4E9DB903}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

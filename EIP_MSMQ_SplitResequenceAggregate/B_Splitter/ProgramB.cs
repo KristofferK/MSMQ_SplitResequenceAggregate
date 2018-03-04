@@ -21,7 +21,7 @@ namespace B_Splitter
         static void Main(string[] args)
         {
             Console.Title = "System B (Splitter)";
-            Console.WriteLine("System B (Splitter). Waiting for message from System A.");
+            Console.WriteLine("System B (Splitter). Waiting for XML message from System A.");
 
             inputChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.AToBChannel);
             outputLuggageChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.BToCChannel);
@@ -63,6 +63,7 @@ namespace B_Splitter
             {
                 var packageNo = numbersInRandomOrder[i];
                 Console.WriteLine($"Sending luggage {packageNo + 1} of {luggageXml.Count}.");
+                var m = new Message();
                 outputLuggageChannel.Send(new PackageWrapper<Luggage>()
                 {
                     PackageId = packageId,

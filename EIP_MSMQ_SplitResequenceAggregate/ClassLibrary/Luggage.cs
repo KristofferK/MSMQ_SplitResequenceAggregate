@@ -26,7 +26,7 @@ namespace ClassLibrary
                 Id = node.SelectSingleNode("Id").InnerText,
                 Identification = int.Parse(node.SelectSingleNode("Identification").InnerText),
                 Category = node.SelectSingleNode("Category").InnerText,
-                Weight = decimal.Parse(node.SelectSingleNode("Weight").InnerText)
+                Weight = decimal.Parse(node.SelectSingleNode("Weight").InnerText.Replace(".",","))
             };
         }
     }
