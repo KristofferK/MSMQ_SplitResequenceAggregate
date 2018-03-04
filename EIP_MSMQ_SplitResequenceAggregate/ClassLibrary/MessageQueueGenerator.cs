@@ -13,6 +13,7 @@ namespace ClassLibrary
         public static string BToCChannel { get; private set; } = @".\Private$\EIP_SRA_B_To_C_Channel";
         public static string BToDChannel { get; private set; } = @".\Private$\EIP_SRA_B_To_D_Channel";
         public static string CToDChannel { get; private set; } = @".\Private$\EIP_SRA_C_To_D_Channel";
+        public static string DToEChannel { get; private set; } = @".\Private$\EIP_SRA_D_To_E_Channel";
 
         public static MessageQueue GenerateMessageQueue(string messageQueueName)
         {

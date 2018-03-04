@@ -62,14 +62,14 @@ namespace B_Splitter
             for (var i = 0; i < luggageXml.Count; i++)
             {
                 var packageNo = numbersInRandomOrder[i];
-                Console.WriteLine($"Sending luggage {packageNo + 1} of {luggageXml.Count}.");
-                var m = new Message();
+                var luggage = Luggage.Create(luggageXml.Item(packageNo));
+                Console.WriteLine($"Sending luggage {luggage}");
                 outputLuggageChannel.Send(new PackageWrapper<Luggage>()
                 {
                     PackageId = packageId,
                     PackageNumber = packageNo + 1,
                     PackageCount = luggageXml.Count,
-                    Body = Luggage.Create(luggageXml.Item(packageNo))
+                    Body = luggage
                 });
             }
 

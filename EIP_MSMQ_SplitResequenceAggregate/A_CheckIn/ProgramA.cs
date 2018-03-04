@@ -13,7 +13,7 @@ namespace A_CheckIn
     class ProgramA
     {
         private static MessageQueue channel;
-        private static bool keepSendingMessages = false;
+        private static bool keepAutomaticallySendingMessages = false;
         private static Random random = new Random();
 
         static void Main(string[] args)
@@ -26,13 +26,18 @@ namespace A_CheckIn
             new Thread(() =>
             {
                 SendMessageToSystemB();
-                while (keepSendingMessages)
+                while (keepAutomaticallySendingMessages)
                 {
                     var sleepDuration = random.Next(20, 50) * 100;
                     Console.WriteLine($"Waiting {sleepDuration} ms");
                     Thread.Sleep(sleepDuration);
                     SendMessageToSystemB();
                 }
+                while (Console.ReadLine() != "exit")
+                {
+                    SendMessageToSystemB();
+                }
+                Environment.Exit(-1);
             }).Start();
 
             Console.ReadLine();
