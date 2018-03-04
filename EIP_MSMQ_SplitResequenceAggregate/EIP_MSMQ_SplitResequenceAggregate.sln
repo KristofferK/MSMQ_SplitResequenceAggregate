@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A_CheckIn", "A_CheckIn\A_CheckIn.csproj", "{0EDB9C69-D932-4130-B229-65062E5B0B20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{34ABECE2-2369-44ED-B450-21DB7E10F96E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "ClassLibrary\Library.csproj", "{34ABECE2-2369-44ED-B450-21DB7E10F96E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "B_Splitter", "B_Splitter\B_Splitter.csproj", "{B84C93D8-DE39-4128-B201-0D1ED546F1DB}"
 EndProject
