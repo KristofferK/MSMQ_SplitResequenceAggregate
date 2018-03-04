@@ -4,15 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Messaging;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace B_Splitter
 {
-    class Program
+    class ProgramB
     {
         private static MessageQueue inputChannel;
         private static MessageQueue outputLuggageChannel;
         private static MessageQueue outputPassangerChannel;
+        private static Random random = new Random();
 
         static void Main(string[] args)
         {
@@ -39,12 +43,33 @@ namespace B_Splitter
         {
             MessageQueue messageQueue = (MessageQueue)source;
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
+            var body = (string)message.Body;
 
             Console.WriteLine("Received " + message.Label);
-            Console.WriteLine(message.Body + "\n\n");
+            Console.WriteLine(body + "\n\n");
 
-            outputLuggageChannel.Send(null);
-            outputLuggageChannel.Send(null);
+            var xml = new XmlDocument();
+            xml.LoadXml(body);
+            var passengerXml = xml.SelectSingleNode("/FlightDetailsInfoResponse/Passenger");
+            var luggageXml = xml.SelectNodes("/FlightDetailsInfoResponse/Luggage");
+
+            var passengerObj = Passenger.Create(passengerXml);
+            Console.WriteLine("Sending passenger: " + passengerObj);
+            outputPassangerChannel.Send(passengerObj);
+
+            var guid = Guid.NewGuid();
+            for (var i = 0; i < luggageXml.Count; i++)
+            {
+                Console.WriteLine($"Sending luggage {i + 1} of {luggageXml.Count}.");
+                outputLuggageChannel.Send(new PackageWrapper<Luggage>()
+                {
+                    PackageId = guid,
+                    PackageNumber = i + 1,
+                    PackageCount = luggageXml.Count,
+                    Body = Luggage.Create(luggageXml.Item(i))
+                });
+            }
+
             messageQueue.BeginReceive();
         }
     }

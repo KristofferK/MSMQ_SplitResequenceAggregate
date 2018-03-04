@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace A_CheckIn
 {
-    class Program
+    class ProgramA
     {
         private static MessageQueue channel;
-        private static bool keepSendingMessages = true;
+        private static bool keepSendingMessages = false;
         private static Random random = new Random();
 
         static void Main(string[] args)
