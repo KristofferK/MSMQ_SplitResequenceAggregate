@@ -12,6 +12,8 @@ namespace C_LuggageResequencer
     {
         private static MessageQueue inputChannel;
         private static MessageQueue outputChannel;
+        private static Dictionary<string, PackageWrapper<Luggage>[]> luggageReceived;
+
         static void Main(string[] args)
         {
             Console.Title = "System C (Resequencer)";
@@ -19,6 +21,8 @@ namespace C_LuggageResequencer
 
             inputChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.BToCChannel);
             outputChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.CToDChannel);
+
+            luggageReceived = new Dictionary<string, PackageWrapper<Luggage>[]>();
 
             ReceiveInputFromSystemB();
 
@@ -34,12 +38,35 @@ namespace C_LuggageResequencer
 
         private static void HandleInputFromSystemB(object source, ReceiveCompletedEventArgs asyncResult)
         {
-            Console.WriteLine("k");
             MessageQueue messageQueue = (MessageQueue)source;
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
             var body = (PackageWrapper<Luggage>)message.Body;
 
             Console.WriteLine($"Received {body}\n");
+
+            var bodyGuid = body.PackageId.ToString();
+            if (!luggageReceived.ContainsKey(bodyGuid))
+            {
+                luggageReceived[bodyGuid] = new PackageWrapper<Luggage>[body.PackageCount];
+            }
+            luggageReceived[bodyGuid][body.PackageNumber - 1] = body;
+
+            if (luggageReceived[bodyGuid].Where(e => e != null).Count() == body.PackageCount)
+            {
+                Console.WriteLine("\nAll package for " + body.PackageId + " has been received!\n");
+                var luggagesOrdered = luggageReceived[bodyGuid].OrderBy(e => e.PackageNumber);
+                for (var i = 0; i < luggagesOrdered.Count(); i++)
+                {
+                    var luggage = luggagesOrdered.ElementAt(i);
+                    var luggageMessage = new Message()
+                    {
+                        Label = $"Luggage {luggage.PackageNumber}/{luggage.PackageCount} from {luggage.PackageId}",
+                        Body = luggage.Body
+                    };
+                    Console.WriteLine("Sending " + luggage.Body);
+                    outputChannel.Send(luggageMessage);
+                }
+            }
 
             messageQueue.BeginReceive();
         }
