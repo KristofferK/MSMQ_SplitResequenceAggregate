@@ -17,4 +17,6 @@ The solution will consist of five subsystems
 * SubsystemD. Receives passenger messages and luggage messages in a fixed order. It will print the messages. When all messages are received, they will be aggregated, and sent to SubsystemE.
 * SubsystemE. Receives an aggregated message. Will print the message.
 
+
+
 ![Overview of the solution](https://scontent-arn2-1.xx.fbcdn.net/v/t34.0-12/28536453_10216217001762906_2071233427_n.jpg?oh=6fdc28f8e5d4454882e86e65d670d8fb&oe=5A9DF26B)
