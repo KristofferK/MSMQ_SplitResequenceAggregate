@@ -49,6 +49,7 @@ namespace D_Receiver
         private static void HandleInputFromSystemB(object source, ReceiveCompletedEventArgs asyncResult)
         {
             MessageQueue messageQueue = (MessageQueue)source;
+            messageQueue.BeginReceive();
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
             var body = (PackageWrapper<Passenger>)message.Body;
 
@@ -57,12 +58,12 @@ namespace D_Receiver
             inputPassengerWithLuggage[body.PackageId].Passenger = body.Body;
             SendIfReady(body.PackageId);
 
-            messageQueue.BeginReceive();
         }
 
         private static void HandleInputFromSystemC(object source, ReceiveCompletedEventArgs asyncResult)
         {
             MessageQueue messageQueue = (MessageQueue)source;
+            messageQueue.BeginReceive();
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
             var body = (PackageWrapper<Luggage>)message.Body;
 
@@ -71,7 +72,6 @@ namespace D_Receiver
             inputPassengerWithLuggage[body.PackageId].Luggage[body.PackageNumber - 1] = body.Body;
             SendIfReady(body.PackageId);
 
-            messageQueue.BeginReceive();
         }
 
         private static void AddToDictionaryIfNotExists(Guid packageId, int packageCount)
@@ -94,6 +94,7 @@ namespace D_Receiver
                     Label = "Passenger and luggage " + packageId.ToString(),
                     Body = passengerWithLuggage
                 });
+                inputPassengerWithLuggage.Remove(packageId);
             }
             Console.WriteLine("\n\n--------------\n");
         }

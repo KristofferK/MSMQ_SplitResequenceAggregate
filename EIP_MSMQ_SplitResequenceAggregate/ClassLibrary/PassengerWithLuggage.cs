@@ -45,6 +45,10 @@ namespace ClassLibrary
             }
         }
 
+        public PassengerWithLuggage()
+        {
+        }
+
         public PassengerWithLuggage(int luggageSize)
         {
             Luggage = new Luggage[luggageSize];
@@ -52,7 +56,7 @@ namespace ClassLibrary
 
         public override string ToString()
         {
-            var sb = new StringBuilder($"Passenger: {Passenger.ToString()}\n");
+            var sb = new StringBuilder($"Passenger: {Passenger}\n");
             for (var i = 0; i < Luggage.Length; i++)
             {
                 sb.AppendLine($"Luggage #{i + 1}: {Luggage[i]}");
