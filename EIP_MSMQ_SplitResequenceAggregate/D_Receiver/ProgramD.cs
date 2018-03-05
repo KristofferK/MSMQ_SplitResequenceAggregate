@@ -13,11 +13,14 @@ namespace D_Receiver
         private static MessageQueue inputPassengerChannel;
         private static MessageQueue inputLuggageChannel;
         private static MessageQueue outputChannel;
+        private static Dictionary<Guid, PassengerWithLuggage> inputPassengerWithLuggage;
 
         static void Main(string[] args)
         {
             Console.Title = "System D (Aggregator)";
             Console.WriteLine("System D (Aggregator). Waiting for passenger messages from System B or luggage messages from System C.");
+
+            inputPassengerWithLuggage = new Dictionary<Guid, PassengerWithLuggage>();
 
             inputPassengerChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.BToDChannel);
             inputLuggageChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.CToDChannel);
@@ -31,14 +34,14 @@ namespace D_Receiver
 
         private static void ReceiveInputFromSystemB()
         {
-            inputPassengerChannel.Formatter = new XmlMessageFormatter(new Type[] { typeof(Passenger) });
+            inputPassengerChannel.Formatter = new XmlMessageFormatter(new Type[] { typeof(PackageWrapper<Passenger>) });
             inputPassengerChannel.ReceiveCompleted += new ReceiveCompletedEventHandler(HandleInputFromSystemB);
             inputPassengerChannel.BeginReceive();
         }
 
         private static void ReceiveInputFromSystemC()
         {
-            inputLuggageChannel.Formatter = new XmlMessageFormatter(new Type[] { typeof(Luggage) });
+            inputLuggageChannel.Formatter = new XmlMessageFormatter(new Type[] { typeof(PackageWrapper<Luggage>) });
             inputLuggageChannel.ReceiveCompleted += new ReceiveCompletedEventHandler(HandleInputFromSystemC);
             inputLuggageChannel.BeginReceive();
         }
@@ -47,9 +50,12 @@ namespace D_Receiver
         {
             MessageQueue messageQueue = (MessageQueue)source;
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
-            var body = (Passenger)message.Body;
+            var body = (PackageWrapper<Passenger>)message.Body;
 
             Console.WriteLine($"Received passenger: {body}\n");
+            AddToDictionaryIfNotExists(body.PackageId, body.PackageCount);
+            inputPassengerWithLuggage[body.PackageId].Passenger = body.Body;
+            SendIfReady(body.PackageId);
 
             messageQueue.BeginReceive();
         }
@@ -58,11 +64,38 @@ namespace D_Receiver
         {
             MessageQueue messageQueue = (MessageQueue)source;
             var message = messageQueue.EndReceive(asyncResult.AsyncResult);
-            var body = message.Body;
+            var body = (PackageWrapper<Luggage>)message.Body;
 
             Console.WriteLine($"Received luggage: {body}\n");
+            AddToDictionaryIfNotExists(body.PackageId, body.PackageCount);
+            inputPassengerWithLuggage[body.PackageId].Luggage[body.PackageNumber - 1] = body.Body;
+            SendIfReady(body.PackageId);
 
             messageQueue.BeginReceive();
+        }
+
+        private static void AddToDictionaryIfNotExists(Guid packageId, int packageCount)
+        {
+            if (!inputPassengerWithLuggage.ContainsKey(packageId))
+            {
+                inputPassengerWithLuggage[packageId] = new PassengerWithLuggage(packageCount);
+            }
+        }
+
+        private static void SendIfReady(Guid packageId)
+        {
+            var passengerWithLuggage = inputPassengerWithLuggage[packageId];
+            Console.WriteLine(passengerWithLuggage);
+            if (passengerWithLuggage.IsReady)
+            {
+                Console.WriteLine("Sending passenger with luggage to System E");
+                outputChannel.Send(new Message()
+                {
+                    Label = "Passenger and luggage " + packageId.ToString(),
+                    Body = passengerWithLuggage
+                });
+            }
+            Console.WriteLine("\n\n--------------\n");
         }
     }
 }

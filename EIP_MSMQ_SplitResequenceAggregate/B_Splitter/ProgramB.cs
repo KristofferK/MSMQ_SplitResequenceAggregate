@@ -52,12 +52,18 @@ namespace B_Splitter
             xml.LoadXml(body);
             var passengerXml = xml.SelectSingleNode("/FlightDetailsInfoResponse/Passenger");
             var luggageXml = xml.SelectNodes("/FlightDetailsInfoResponse/Luggage");
+            var packageId = Guid.NewGuid();
 
             var passengerObj = Passenger.Create(passengerXml);
             Console.WriteLine("Sending passenger: " + passengerObj);
-            outputPassangerChannel.Send(passengerObj);
+            outputPassangerChannel.Send(new PackageWrapper<Passenger>()
+            {
+                PackageId = packageId,
+                PackageNumber = -1,
+                PackageCount = luggageXml.Count,
+                Body = passengerObj
+            });
 
-            var packageId = Guid.NewGuid();
             var numbersInRandomOrder = Enumerable.Range(0, luggageXml.Count).OrderBy(e => Guid.NewGuid()).ToArray();
             for (var i = 0; i < luggageXml.Count; i++)
             {

@@ -19,10 +19,10 @@ namespace C_LuggageResequencer
             Console.Title = "System C (Resequencer)";
             Console.WriteLine("System C (Resequencer). Waiting for luggage messages from System B.");
 
+            luggageReceived = new Dictionary<string, PackageWrapper<Luggage>[]>();
+
             inputChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.BToCChannel);
             outputChannel = MessageQueueGenerator.GenerateMessageQueue(MessageQueueGenerator.CToDChannel);
-
-            luggageReceived = new Dictionary<string, PackageWrapper<Luggage>[]>();
 
             ReceiveInputFromSystemB();
 
@@ -61,9 +61,9 @@ namespace C_LuggageResequencer
                     var luggageMessage = new Message()
                     {
                         Label = $"Luggage {luggage.PackageNumber}/{luggage.PackageCount} from {luggage.PackageId}",
-                        Body = luggage.Body
+                        Body = luggage
                     };
-                    Console.WriteLine("Sending " + luggage.Body);
+                    Console.WriteLine("Sending " + luggageMessage.Body);
                     outputChannel.Send(luggageMessage);
                 }
             }

@@ -45,6 +45,7 @@
     <Compile Include="MessageQueueGenerator.cs" />
     <Compile Include="PackageWrapper.cs" />
     <Compile Include="Passenger.cs" />
+    <Compile Include="PassengerWithLuggage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
